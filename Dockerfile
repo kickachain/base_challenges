@@ -5,7 +5,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     UV_CACHE_DIR=/opt/base/.uv-cache \
     VIRTUAL_ENV=/opt/base/.venv \
     PATH=/opt/base/.venv/bin:$PATH \
-    BASH_ENV=/etc/profile.d/base-venv.sh
+    SHELL=/bin/zsh
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends zsh \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/base
 
@@ -18,12 +22,7 @@ RUN mkdir -p /app && ln -s /opt/base/.venv /app/.venv
 RUN printf '%s\n' \
     'export VIRTUAL_ENV=/opt/base/.venv' \
     'export PATH=/opt/base/.venv/bin:$PATH' \
-    > /etc/profile.d/base-venv.sh
-RUN printf '%s\n' \
-    'export VIRTUAL_ENV=/opt/base/.venv' \
-    'export PATH=/opt/base/.venv/bin:$PATH' \
-    '[ -f /etc/profile.d/base-venv.sh ] && . /etc/profile.d/base-venv.sh' \
-    >> /root/.bashrc
+    >> /root/.zshrc
 
 WORKDIR /app
 
